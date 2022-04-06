@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This web application is just practice. Todo app is my personal kata. The app is going to have users, but no user registration. The users are going to be created when the tables are created during migrations. The user is going to have a main dashboard were it can view todo items. It can create items. It can delete items. It can mark them complete. It can also view the history of all the tasks that it has completed. The undo feature is going to be implemented last and is intended as a challenge; expect for it not to work.
+This web application is just practice. Todo app is my personal kata. The app is going to have users and a user registration process. User registration and validation are not secure: no serious password should be used. The user is going to have a main dashboard were it can view todo items. It can create items. It can delete items. It can mark them complete. It can also view the history of all the tasks that it has completed. The undo feature is going to be implemented last and is intended as a challenge; expect for it not to work.
 
 The app has a log file where unusual events are recorded. This is done for debugging purposes.
 
@@ -13,6 +13,12 @@ The app has a log file where unusual events are recorded. This is done for debug
 * session: string
 * user_id: user reference
 
+
+### Error-Sessions
+
+* session: string
+* user_id: user reference
+* error_code: string? for now lets use a string.
 
 ### Users
 
@@ -68,6 +74,12 @@ If the credentials are correct, it creates a session, sets a session cookie, and
 
 If the credentials are wrong, it redirects to **GET /error/wrong-credentials**.
 
+
+### GET /register
+
+Render registration form.
+
+If form input is invalid, redirect to **GET error/bad-registration**
 
 #### GET /dashboard
 
@@ -160,7 +172,12 @@ This also must not allow the user to access an id that it has no authorization t
 
 ## Error Routes
 
-All error routes use url params if they are rendered by the server. Do not, under any circumstance, send user credentials over a url. If requested in the documentation, please contact architect because this is a mistake.
+All error routes use url params if they are rendered by the server. Do not, under any circumstance, send user credentials over a url. If requested in the documentation, please contact architect because this is a mistake.\
+
+Since all errors are redirects and all http requests are stateless, there is no way a dynamic error can be properly handled without cookies. To me cookies are a cheap and messy way of extengin http to appear stateful. Regardless, there are two ways to go about it. 1) store the information the error needs. This requires error codes to be stored in the browser. Since there are multiple errors, this approach would either need to store many cookies, or one large cookie. It needs to make sure that no sensitive information is send over, if possible. This is partcularly true since there is no way of knowing how 'safe' a cookie is stored. Instead. I would rather use the second approach, have an error-session table. This way, when the error occurs, an error-session is created and all the information pertinent to that error is stored, along with the session - since no dynamic error occurs when the user is not logged in. This way if the user and the session match - I have this idea that it is a vulnerability to just trus a error-session id; what if an attacker with two accounts, A and B, makes an error with account A but accesses the error using account B? Would that be a serious issue? In general it is not a good idea to have users accessing stuff is not theirs. For that reason, as a gut feeling, I am implementing a match between the error-session and the user-session that made that error. It is best to be slow than sorry -.
+
+How how to you store the error information? error codes? or store the data itself?
+
 
 ### GET /error/wrong-credentials
 
@@ -169,6 +186,16 @@ Static html
 
 Page that explains to the user that the credentials submitted in a login form are incorrect. The page should indicate the user ways to troubleshoot the error, alternatives, and who to contact for help.
 
+
+### GET error/bad-registration
+
+#### Properties
+Dynamic html
+
+Indicated that there is missing or wrong information in the registration form the user submitted. The error must indicate what is the issue specific to that form.
+
+#### Codes
+missing username, missing password, missing password confirmation, passwords do not match, username already taken
 
 ### GET /error/not-authorized
 
@@ -189,36 +216,49 @@ Page that explains to the user that no session cookie was found. Explain to the 
 ### GET /error/task-not-found
 
 #### Properties
-Dynamic html, url params
+Dynamic html
 
 Displays the id of a task that the user attempted to perform an operation on, but the task is missing. It explains to the user that the task is missing and what are its options. With the exception of **GET /dashboard/task/:id** with some artbitrarily given :id, this is not normal, this means there is some sort of bug in the web app. This incident needs to be reported.
 
+#### Codes
+:id --> the id that the user does not have access to is stored as is in the error-session and used for rendering.
 
 ### GET /error/bad-task
 
 #### Properties
-Dynamic html, url params
+Dynamic html
 
 Page that explains to the user that some information is missing or not properly formatted. This information needs to be pertinent to the task just submitted.
 
 It should display a return to task option, which redirects to **GET /dashboard/new** with the value of the forms as params. Is this possible, even if the description is long? HTTP being stateless is really bad for desig of this thing. How do I save the information of the form so that the user does not have to start over if it made a mistake?
 
+#### Codes
+missing name, missing summary.
 
 ## Strategy
 
-### Stage 1, the database
+### Stage the database
 
-As usual, it is best to start from the database and move into the front end. Start with the user databse since it depends on nothing and others depend on it. Then go with the sessions database. Make the dependency between the sessions and the users. Then do the tasks, then mark the dependency to the users. Use the todo app as template to achieve this. Test whether everything is working using the rails console. After that, reset the database and run a seed that creates all users and their passwords.
+As usual, it is best to start from the database and move into the front end. Start with the user database since it depends on nothing and others depend on it. Then go with the sessions database. Make the dependency between the sessions and the users. Then do the error-session database. Then mark the dependencies to the users. Then do the tasks, then mark the dependency to the users. I think it is best if you create the user, then session, then error-session, then task and then do the assosiations. Use the todo app as template to achieve this. Test whether everything is working using the rails console.
 
 At this point, you should have all models working
 
-### Stage 2, landing page
+### Stage landing page
 
-Naturally, start with index.html. It is simple. Then go with the FAQ. This one will be populated as indicated in the other routes. Then proceed with all the error pages.
+Naturally, start with index.html. It is simple. Leave the registration link unimplemented.
 
-At this point, you should have the landing page all ready, the FAQ initial template ready, and have all the static error pages.
 
-### Stage 3, dashbaord
+### Stage registration
+
+With the landing page working, proceed to create a registration page at **GET /register**. All fields are required.
+
+### Stage other static misc
+
+Then go with the FAQ; at **GET /faq**. This one will be populated as indicated in the other routes. Then proceed with all the error pages.
+
+At this point, you should have the landing page all ready, user registration, the FAQ initial template ready, and have all the static error pages.
+
+### Stage dashbaord
 
 Using the rails console, add some tasks to the user Uriel. Now proceed to create the dashboard controller and view as follows:
 1. Create a view with only the control pane. Leave all buttons inactive
@@ -228,18 +268,18 @@ Using the rails console, add some tasks to the user Uriel. Now proceed to create
 
 At this point you should have all the dashboard view/aesthetics complete. The dashbhoard should be able to read existing tasks from a user.
 
-### Stage 4, Details
+### Stage Details
 
 Create a new controller to see the details of a task. The route is **GET /dashboard/task/:id**. You can name the controller Detail or something; idk. Implement the anchor 'see more' and make sure the routing is correct. Then create a view to see the task. Include the 'Edit' anb mark complete buttons but leave it inactive.
 
 At this point you should be able to see the complete details of a task without being ap=ble to edit it or marking it complete.
 
-### Stage 5, psoting a new task
+### Stage posting a new task
 now create the **GET /dashboard/new** controller and view. Implement the 'new' button in the control pane in **/dashboard** using an anchor tag with a button, referencing the new view. This vierw can be left empty; add debug code of your choice to make sure everything is working properly. Then implement the **/dashboard/new** form to create a new task. Please mark the required fields. Leave the submit button inactive.
 
 At this point the view for the dashboard should be complete.
 
-### Stage 6, inserting a new task
+### Stage inserting a new task
 
 Create the **POST /dashboard/new** controller. This does not have a view; which means that you have to make sure you use a redirect to **GET /dashboard**, which should request an updated version of the page, reflecting the change. Make sure to soft-enforce all required fields.
 
@@ -247,15 +287,31 @@ This reminds me that last time the db did not enforce the required fields, so yo
 
 At this point, the user should be able to add new tasks.
 
-### Stage 7, deleting a task
+### Stage deleting a task
 
 This stage is about implementing the 'delete' button for each task. This button is implemented using a hidden form with the information needed to delete the task. Namely its id. There must be some sort of safeguard preventing nonauthorized users from deleting a task they do not own.
 
-### Stage 8, mark a task completed
+### Stage mark a task completed
 
-### Stage 9, view history
+This stage is about implementing the 'mark completed' button in the task row. Its implementation is similar to that of delete, but instead it modifies the task.completed field from FALSE to TRUE.
 
-### Stage 10, history undo action
+### Stage view history
+
+This fetches all of the tasks for that user that also have tasks marked as completed. This are rendered in a fashion identical to that of the dashboard except that instead of having a 'mark completed' button it has a 'mark ongoing' button. These buttons will be left unimplemented. This tasks can also be deleted. This operation cannot be undone. It also has a button at the very top, just before the table, with text 'delete all' that does exactly that.
+
+### Stage delete one history
+
+Implement a single delete, with a logic identical to the one implemented in the dashboard
+
+### Stage history mark ongoing action
+
+Changes the task.completed field from TRUE to FALSE. It is identical to the one implemented in teh dashboard, just with opposite result.
+
+### Delete all
+
+Implement the delete all button at the top. Do this by having a hidden form with a list of all tasks ids being displayed.
+
+### Bonus Stage time-bound undo, including deletes
 
 
 
