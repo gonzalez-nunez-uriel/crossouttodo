@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  session_string: MyString
+  user: one
+  expiration: 2022-04-07 01:07:04
+
+two:
+  session_string: MyString
+  user: two
+  expiration: 2022-04-07 01:07:04
