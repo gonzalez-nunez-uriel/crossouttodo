@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_07_060704) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_07_062645) do
+  create_table "error_sessions", force: :cascade do |t|
+    t.string "error_string"
+    t.integer "user_id", null: false
+    t.text "error_code"
+    t.datetime "expiration"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_error_sessions_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.string "session_string"
     t.integer "user_id", null: false
@@ -41,6 +51,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_07_060704) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "error_sessions", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "tasks", "users"
 end
