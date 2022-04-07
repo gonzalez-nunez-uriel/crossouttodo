@@ -22,9 +22,9 @@ The app has a log file where unusual events are recorded. This is done for debug
 
 ### Users
 
-* name: string
-* username: string
-* password: string
+* name: string, required
+* username: string, required, unique
+* password: string, required
 
 
 ### Taks
