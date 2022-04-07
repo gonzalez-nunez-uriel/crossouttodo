@@ -6,6 +6,8 @@ This web application is just practice. Todo app is my personal kata. The app is 
 
 The app has a log file where unusual events are recorded. This is done for debugging purposes.
 
+Sessions and error sessions tables are used to keep sessions of users. Sessions need to have a normal expiration time - a day, a week, no end(not recommended), but there is no need to have error sessions for so long. In particular since this are consumed as soon as the user visits the error page. So it can be deleted as soon as the user leaves that error page. One way to achieve this is to have the info be deleted as soon as the error page is rendered, but then the info will be lost if the user ask for a rerender of that page. The best way would be to delete the data as soon as the user leaves the page, but there is no way to do that with http (at least I cannot think of a way to do it). So the other way would be to give the error-sessions a short lifespan - like 5 to 10 mins, and have them be automatically deleted. This is simple, yet inconvenient. I really don't know what to do. Should I go with url params? If so, I would need to be careful about sensind sensitive info for the error handling, but with error codes I don't think that would be the case.
+
 ## Schemas
 
 ### Sessions
