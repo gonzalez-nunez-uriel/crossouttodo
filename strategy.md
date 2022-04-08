@@ -128,7 +128,7 @@ Requires session cookie
 Handles the insertion of a new task to the database. The controller needs to enforce the required fields. If the form is not proper, send to **GET /error/bad-task**.
 
 
-### POST /dashboard/undo
+### POST /dashboard/undo EXTRA
 
 #### Properties
 Non-rendering
