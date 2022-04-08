@@ -3,9 +3,7 @@ class RegisterController < ApplicationController
   end
 
   def insert
-    if params[:password] == ""
-      redirect_to '/error/bad-registration/validation-error'
-    elsif params[:password] == params[:password_confirmation]      
+    if params[:password] == params[:password_confirmation]      
       new_user = User.new
       new_user.name = params[:name]
       new_user.username = params[:username]
@@ -18,6 +16,8 @@ class RegisterController < ApplicationController
       rescue ActiveRecord::RecordInvalid => e
         # It would be nice to have an error that can handle the case where the username already exists
         # An error session is needed here
+
+        cookies[:ValidationError] = { value: e.to_s, expires: 3.minutes.from_now }
         redirect_to '/error/bad-registration/validation-error'  
       end
     else
