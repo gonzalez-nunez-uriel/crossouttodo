@@ -9,4 +9,5 @@ Rails.application.routes.draw do
   post 'register', to: 'register#insert'
   get 'error/bad-registration/validation-error', to: 'error#registration_validation_error'
   get 'error/bad-registration/password-mismatch', to: 'error#registration_password_mismatch'
+  post '/login', to: 'login#authenticate'
 end
