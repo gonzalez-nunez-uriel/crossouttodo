@@ -9,7 +9,7 @@ class DashboardController < ApplicationController
         @user = User.find( browser_session.user_id )
 
         if @user != nil
-          # TO BE IMPLEMENTED
+          @tasks = Task.where( user_id: @user.id )
         else
           redirect_to '/error/user-no-longer-exists'
         end
@@ -21,5 +21,9 @@ class DashboardController < ApplicationController
     else
       redirect_to '/error/not-logged-in'
     end
+  end
+
+  def preferences
+    # TO BE IMPLEMENTED
   end
 end
