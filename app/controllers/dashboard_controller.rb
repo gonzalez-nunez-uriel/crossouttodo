@@ -1,12 +1,12 @@
 class DashboardController < ApplicationController
   def dashboard
-    if cookies[:session_string] != nil
+    if session[:session_string] != nil
       
-      session =  Session.find_by( session_string: cookies[ :session_string ] )
+      browser_session =  Session.find_by( session_string: session[ :session_string ] )
       
-      if session != nil
+      if browser_session != nil
 
-        @user = User.find( session.user_id )
+        @user = User.find( browser_session.user_id )
 
         if @user != nil
           # TO BE IMPLEMENTED

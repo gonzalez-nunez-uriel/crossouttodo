@@ -5,9 +5,8 @@ module LoginHelper
         new_session.session_string = generate_session_string
         new_session.user_id = user.id
         new_session.expiration = expiration_time
-        new_cookie = { value: new_session.session_string, expires: expiration_time }
         
-        return [ new_session, new_cookie ]
+        return new_session
     end
     
     private

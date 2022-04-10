@@ -7,9 +7,9 @@ class LoginController < ApplicationController
                 if @user.password == params[:password]
                     # Since the homepage can detect if a user has a valid session, then a user accessing this page is guaranteed to not have a session
                     # Therefore, there is no need to check if there exists a session with this user.
-                    new_session, new_cookie = LoginHelper.generate_new_session_n_cookie @user
-                    new_session.save!
-                    cookies[:session_string] = new_cookie
+                    server_session = LoginHelper.generate_new_session_n_cookie @user
+                    server_session.save!
+                    session[:session_string] = server_session.session_string
                     redirect_to '/dashboard'
                 else
                     redirect_to '/error/bad-login/wrong-password'
