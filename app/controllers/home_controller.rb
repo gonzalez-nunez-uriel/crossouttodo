@@ -23,4 +23,8 @@ class HomeController < ApplicationController
       @user_exists = false
     end
   end
+
+  def faq
+    
+  end
 end
