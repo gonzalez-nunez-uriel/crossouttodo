@@ -4,7 +4,7 @@
     </div>
 
 
-    <% unless @session_exists %>
+    <% unless @user_exists %>
         <div id="login">
             <form action="/login" method="POST">
                 <label for="username">Username</label>
@@ -19,6 +19,7 @@
         </div>
     <% else %>
         <div id="quick-access">
+            <p>Welcome <%= @user.name %></p>
             <a href="/dashboard"><button>Go to Dashboard</button></a>
         </div>
     <% end %>
