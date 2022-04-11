@@ -6,11 +6,23 @@ Rails.application.routes.draw do
   root "home#index"
 
   get '/faq', to: 'home#faq'
+
+  # registration
   get 'register', to: 'register#register'
   get 'register/success', to: 'register#success'
   post 'register', to: 'register#insert'
+  # registration errors
   get 'error/bad-registration/validation-error', to: 'error#registration_validation_error'
   get 'error/bad-registration/password-mismatch', to: 'error#registration_password_mismatch'
+
+  # login
   post '/login', to: 'login#authenticate'
+  # login errors
+
+  # dashboard
   get 'dashboard', to: 'dashboard#dashboard'
+  get 'dashboard/new', to: 'dashboard#new'
+  post 'dashboard/new', to: 'dashboard#insert'
+  # dashboard errors
+  get 'error/bad-task/validation-error', to: 'error#task_validation_error'
 end
