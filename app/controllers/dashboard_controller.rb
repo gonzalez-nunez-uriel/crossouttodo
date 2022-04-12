@@ -9,7 +9,7 @@ class DashboardController < ApplicationController
         @user = User.find( browser_session.user_id )
 
         if @user != nil
-          @tasks = Task.where( user_id: @user.id )
+          @tasks = Task.where( user_id: @user.id, completed: false )
         else
           redirect_to '/error/user-no-longer-exists'
         end
