@@ -47,6 +47,10 @@ module DashboardHelper
         tasks = Task.where( user_id: user_id, completed: false )
     end
 
+    def self.get_completed_tasks user_id
+        tasks = Task.where( user_id: user_id, completed: true )
+    end
+
     def self.get_task task_id
         return Task.find(task_id)
     end

@@ -115,4 +115,16 @@ class DashboardController < ApplicationController
     end
   end
 
+  def history
+    error_redirect_url, @user = DashboardHelper.get_user session[ :session_string ]
+
+    if error_redirect_url == nil
+      
+      @tasks = DashboardHelper.get_completed_tasks @user.id
+      
+    else
+      redirect_to error_redirect_url
+    end
+  end
+
 end

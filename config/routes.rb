@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   get 'dashboard/task/:id', to: 'dashboard#details'
   post 'dashboard/delete'
   post 'dashboard/completed'
+  get 'dashboard/history'
   # dashboard errors
   get 'error/bad-task/validation-error', to: 'error#task_validation_error'
   get 'error/not-authorized', to: 'error#not_authorized'

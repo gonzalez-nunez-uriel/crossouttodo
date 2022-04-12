@@ -1,0 +1,50 @@
+<div id="control-panel">
+    <div id="user-info-panel">
+        <img src="" alt="profile pic"/>
+        <div id="user-details-panel">
+            <h2 id="dashboard-name">
+                <%= @user.name %>
+            </h2>
+            <h3 id="dashboard-username">
+                <%= @user.username %>
+            </h3>
+            <a href="/dashboard/preferences"><button>Preferences</button></a>
+        </div>
+    </div>
+    <div id="action-panel">
+        <a href="/dashboard/new"><button>New Task</button></a>
+        <a href="/dashboard"><button>Dashboard</button></a>
+    </div>
+</div>
+<div id="task-panel">
+    <h2>Things Completed</h2>
+    <table id="task-table">
+    <tr>
+        <th>Name</th>
+        <th>Summary</th>
+        <th>Deadline</th>
+    </tr>
+
+    <% @tasks.each do |t|%>
+        <tr class="task-row">
+            <td><%= t.name %></td>
+            <td><%=  t.summary %></td>
+            <td><a href= <%= "/dashboard/task/#{ t.id }" %> >See Details</a></td>
+            <td><%= if t.deadline != nil then t.deadline else "no deadline" end %></td>
+            <td>
+                <form action="/dashboard/not-completed" method="POST" >
+                    <input type="hidden" name="task_id" value ="<%= t.id  %>" />
+                    <input type="submit" value="Mark Ongoing" />
+                </form>
+            </td>
+             <td>
+                <form action="/dashboard/delete" method="POST" >
+                    <input type="hidden" name="task_id" value ="<%= t.id  %>" />
+                    <input type="submit" value="Delete" />
+                </form>
+            </td>
+        </tr>
+    <% end  %>
+
+  </table>
+</div>
