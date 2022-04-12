@@ -70,4 +70,25 @@ class DashboardController < ApplicationController
 
   end
 
+  def details
+
+    error_redirect_url, user = DashboardHelper.get_user session[ :session_string ]
+
+    if error_redirect_url == nil
+      
+      @task = DashboardHelper.get_task params[ :id ]
+
+      if @task.user_id == user.id
+        # Ready to render
+      else
+        # maybe add an error cookie? Best to just leave it generic
+        redirect_to '/error/not-authorized'
+      end
+      
+    else
+      redirect_to error_redirect_url
+    end
+
+  end
+
 end

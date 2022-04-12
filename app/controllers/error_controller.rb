@@ -22,10 +22,16 @@ class ErrorController < ApplicationController
         render template: 'error/registration/password-mismatch'
     end
 
+    def not_authorized
+        render template: 'error/not-authorized'
+    end
+
     private
 
     def validation_error
         @errors = cookies[:ValidationError]
         render template: 'error/validation-error'
     end
+
+    
 end

@@ -1,0 +1,23 @@
+<h1>Details</h1>
+
+<div id="details-header">
+    <h2>Task name: <%= @task.name %></h2>
+    <p id="task-status"> <%= if @task.completed then "Complete" else "Not Complete" end %> </p>
+</div>
+
+<div id="details-summary">
+    <h3>Summary</h3>
+    <p><%=@task.summary%></p>
+</div>
+<div id="details-description">
+    <h3>Description</h3>
+    <p><%=@task.description%></p>
+</div>
+<div id="details-deadline">
+    <h3>Deadline</h3>
+    <p><%=@task.deadline%></p>
+</div>
+
+
+
+
