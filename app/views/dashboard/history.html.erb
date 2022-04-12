@@ -21,33 +21,40 @@
 </div>
 <div id="task-panel">
     <h2>Things Completed</h2>
-    <table id="task-table">
-    <tr>
-        <th>Name</th>
-        <th>Summary</th>
-        <th>Deadline</th>
-    </tr>
 
-    <% @tasks.each do |t|%>
-        <tr class="task-row">
-            <td><%= t.name %></td>
-            <td><%=  t.summary %></td>
-            <td><a href= <%= "/dashboard/task/#{ t.id }" %> >See Details</a></td>
-            <td><%= if t.deadline != nil then t.deadline else "no deadline" end %></td>
-            <td>
-                <form action="/dashboard/not-completed" method="POST" >
-                    <input type="hidden" name="task_id" value ="<%= t.id  %>" />
-                    <input type="submit" value="Mark Ongoing" />
-                </form>
-            </td>
-             <td>
-                <form action="/dashboard/history/delete" method="POST" >
-                    <input type="hidden" name="task_id" value ="<%= t.id  %>" />
-                    <input type="submit" value="Delete" />
-                </form>
-            </td>
+    <% if @tasks.size > 0 %>
+
+        <table id="task-table">
+        <tr>
+            <th>Name</th>
+            <th>Summary</th>
+            <th>Deadline</th>
         </tr>
-    <% end  %>
+
+        <% @tasks.each do |t|%>
+            <tr class="task-row">
+                <td><%= t.name %></td>
+                <td><%=  t.summary %></td>
+                <td><a href= <%= "/dashboard/task/#{ t.id }" %> >See Details</a></td>
+                <td><%= if t.deadline != nil then t.deadline else "no deadline" end %></td>
+                <td>
+                    <form action="/dashboard/not-completed" method="POST" >
+                        <input type="hidden" name="task_id" value ="<%= t.id  %>" />
+                        <input type="submit" value="Mark Ongoing" />
+                    </form>
+                </td>
+                <td>
+                    <form action="/dashboard/history/delete" method="POST" >
+                        <input type="hidden" name="task_id" value ="<%= t.id  %>" />
+                        <input type="submit" value="Delete" />
+                    </form>
+                </td>
+            </tr>
+        <% end  %>
+
+    <% else %>
+        <p>Nothing to display</p>
+    <% end %>
 
   </table>
 </div>

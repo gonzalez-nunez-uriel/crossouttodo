@@ -105,7 +105,7 @@ class DashboardController < ApplicationController
       
       Task.delete_by(user_id: user.id, completed: true)
       redirect_to '/dashboard/history'
-      
+
     else
       redirect_to error_redirect_url
     end
@@ -165,6 +165,9 @@ class DashboardController < ApplicationController
     if error_redirect_url == nil
       
       @tasks = DashboardHelper.get_completed_tasks @user.id
+      puts '--------------------------------------------------'
+      puts @tasks.size
+      puts '--------------------------------------------------'
       
     else
       redirect_to error_redirect_url
