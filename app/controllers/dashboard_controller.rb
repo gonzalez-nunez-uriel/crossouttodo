@@ -115,6 +115,30 @@ class DashboardController < ApplicationController
     end
   end
 
+  def not_completed
+    error_redirect_url, user = DashboardHelper.get_user session[ :session_string ]
+
+    if error_redirect_url == nil
+      
+      task = DashboardHelper.get_task params[ :task_id ]
+
+      # We must make sure the user has ownership of the task it is trying to delete
+      if task.user_id == user.id
+        # is it really this simple? I could not find method delete!()
+        task.completed = false
+        task.save
+        redirect_to '/dashboard/history'
+
+      else
+        # maybe add an error cookie? Best to just leave it generic
+        redirect_to '/error/not-authorized'
+      end
+      
+    else
+      redirect_to error_redirect_url
+    end
+  end
+
   def history
     error_redirect_url, @user = DashboardHelper.get_user session[ :session_string ]
 
@@ -126,5 +150,7 @@ class DashboardController < ApplicationController
       redirect_to error_redirect_url
     end
   end
+
+  
 
 end
