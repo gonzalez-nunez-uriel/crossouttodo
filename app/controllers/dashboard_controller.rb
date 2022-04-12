@@ -98,6 +98,19 @@ class DashboardController < ApplicationController
     end
   end
 
+  def delete_all
+    error_redirect_url, user = DashboardHelper.get_user session[ :session_string ]
+
+    if error_redirect_url == nil
+      
+      Task.delete_by(user_id: user.id, completed: true)
+      redirect_to '/dashboard/history'
+      
+    else
+      redirect_to error_redirect_url
+    end
+  end
+
   def completed
     error_redirect_url, user = DashboardHelper.get_user session[ :session_string ]
 
