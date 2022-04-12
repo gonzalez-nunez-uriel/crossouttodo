@@ -69,6 +69,7 @@ class DashboardController < ApplicationController
   end
 
   def delete
+
     error_redirect_url, user = DashboardHelper.get_user session[ :session_string ]
 
     if error_redirect_url == nil
@@ -79,7 +80,13 @@ class DashboardController < ApplicationController
       if task.user_id == user.id
         # is it really this simple? I could not find method delete!()
         task.delete
-        redirect_to '/dashboard'
+
+        if params[:from_history]
+          redirect_to '/dashboard/history'
+        else
+          redirect_to '/dashboard'
+        end
+        
 
       else
         # maybe add an error cookie? Best to just leave it generic

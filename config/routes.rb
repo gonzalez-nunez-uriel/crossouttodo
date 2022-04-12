@@ -24,7 +24,8 @@ Rails.application.routes.draw do
   get 'dashboard/new'
   post 'dashboard/new', to: 'dashboard#insert'
   get 'dashboard/task/:id', to: 'dashboard#details'
-  post 'dashboard/delete'
+  match 'dashboard/delete', via: [:post], to: 'dashboard#delete', defaults: { from_history: false }
+  match 'dashboard/history/delete', via: [:post], to: 'dashboard#delete', defaults: { from_history: true }
   post 'dashboard/completed'
   get 'dashboard/history'
   post '/dashboard/not-completed'
