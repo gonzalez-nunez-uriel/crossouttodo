@@ -1,26 +1,16 @@
 class DashboardController < ApplicationController
   def dashboard
-    if session[:session_string] != nil
+
+    error_redirect_url, @user = DashboardHelper.get_user session[ :session_string ]
+
+    if error_redirect_url == nil
       
-      browser_session =  Session.find_by( session_string: session[ :session_string ] )
+      @tasks = DashboardHelper.get_pending_tasks @user.id
       
-      if browser_session != nil
-
-        @user = User.find( browser_session.user_id )
-
-        if @user != nil
-          @tasks = Task.where( user_id: @user.id, completed: false )
-        else
-          redirect_to '/error/user-no-longer-exists'
-        end
-
-      else
-        redirect_to '/error/no-session-found'
-      end
-
     else
-      redirect_to '/error/not-logged-in'
+      redirect_to error_redirect_url
     end
+
   end
 
   def preferences
