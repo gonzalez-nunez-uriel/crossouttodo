@@ -21,10 +21,10 @@ Rails.application.routes.draw do
 
   # dashboard
   get 'dashboard', to: 'dashboard#dashboard'
-  get 'dashboard/new', to: 'dashboard#new'
+  get 'dashboard/new'
   post 'dashboard/new', to: 'dashboard#insert'
   get 'dashboard/task/:id', to: 'dashboard#details'
-  post 'dashboard/delete', to: 'dashboard#delete'
+  post 'dashboard/delete'
   post 'dashboard/completed'
   # dashboard errors
   get 'error/bad-task/validation-error', to: 'error#task_validation_error'
