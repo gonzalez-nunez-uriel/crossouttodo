@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_10_011057) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_07_060704) do
   create_table "sessions", force: :cascade do |t|
     t.string "session_string"
     t.integer "user_id", null: false
@@ -25,7 +25,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_10_011057) do
     t.text "description"
     t.datetime "deadline"
     t.datetime "date_completed"
-    t.boolean "completed", default: true
+    t.boolean "completed", default: false
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
